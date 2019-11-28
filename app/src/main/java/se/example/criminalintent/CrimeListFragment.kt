@@ -54,47 +54,4 @@ class CrimeListFragment : Fragment() {
         adapter = CrimeAdapter(crimes)
         crimeRecyclerView.adapter = adapter
     }
-
-    /**
-     * ViewHolder
-     */
-    private inner class CrimeHolder(view: View): RecyclerView.ViewHolder(view), View.OnClickListener {
-
-        private lateinit var crime: Crime
-        private val titleTextView : TextView = view.findViewById(R.id.crime_title)
-        private val dateTextView: TextView = view.findViewById(R.id.crime_date)
-
-        init {
-            itemView.setOnClickListener(this)
-        }
-
-        override fun onClick(v: View?) {
-            Toast.makeText(context, "${crime.title} pressed!", Toast.LENGTH_SHORT).show()
-        }
-
-        fun bind(crime: Crime) {
-            this.crime = crime
-            titleTextView.text = this.crime.title
-            dateTextView.text = this.crime.date.toString()
-        }
-    }
-
-    /**
-     * Adapter
-     */
-    private inner class CrimeAdapter(var crimes: List<Crime>) : RecyclerView.Adapter<CrimeHolder>() {
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CrimeHolder {
-            val view = layoutInflater.inflate(R.layout.list_item_crime, parent, false)
-            return CrimeHolder(view)
-        }
-
-        override fun getItemCount() = crimes.size
-
-        override fun onBindViewHolder(holder: CrimeHolder, position: Int) {
-            holder.bind(crimes[position])
-        }
-
-    }
-
-
 }
