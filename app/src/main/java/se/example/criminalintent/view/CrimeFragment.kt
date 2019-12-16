@@ -1,4 +1,4 @@
-package se.example.criminalintent
+package se.example.criminalintent.view
 
 import android.os.Bundle
 import android.text.Editable
@@ -10,6 +10,7 @@ import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
 import androidx.fragment.app.Fragment
+import se.example.criminalintent.R
 import se.example.criminalintent.model.Crime
 
 class CrimeFragment : Fragment() {

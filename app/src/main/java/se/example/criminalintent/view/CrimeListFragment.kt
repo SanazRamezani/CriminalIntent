@@ -1,16 +1,17 @@
-package se.example.criminalintent
+package se.example.criminalintent.view
 
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import se.example.criminalintent.CrimeAdapter
+import se.example.criminalintent.R
 import se.example.criminalintent.model.Crime
 import se.example.criminalintent.viewmodel.CrimeListViewModel
 
@@ -31,11 +32,6 @@ class CrimeListFragment : Fragment() {
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        Log.d(TAG, "Total crime: ${crimeListViewModel.crimes.size}")
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.fragment_crime_list, container, false)
@@ -46,11 +42,15 @@ class CrimeListFragment : Fragment() {
         crimeRecyclerView = view.findViewById(R.id.crime_recycler_view) as RecyclerView
         crimeRecyclerView.layoutManager = LinearLayoutManager(context)
 
-        updateUI()
+        crimeListViewModel.crimeListLiveData.observe(viewLifecycleOwner, Observer { crimes ->
+            crimes?.let {
+                Log.i(TAG, "Got crimes ${crimes.size}")
+                updateUI(crimes)
+            }
+        })
     }
 
-    private fun updateUI() {
-        val crimes = crimeListViewModel.crimes
+    private fun updateUI(crimes: List<Crime>) {
         adapter = CrimeAdapter(crimes)
         crimeRecyclerView.adapter = adapter
     }
