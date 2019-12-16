@@ -1,5 +1,6 @@
 package se.example.criminalintent.view
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -11,18 +12,21 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import se.example.criminalintent.CrimeAdapter
+import se.example.criminalintent.CrimeAdapterCallbacks
 import se.example.criminalintent.R
 import se.example.criminalintent.model.Crime
 import se.example.criminalintent.viewmodel.CrimeListViewModel
+import java.util.*
 
-private  const val TAG = "CrimeListFragment"
+private const val TAG = "CrimeListFragment"
 
-class CrimeListFragment : Fragment() {
+class CrimeListFragment : Fragment(), CrimeAdapterCallbacks {
 
-    private lateinit var crimeRecyclerView : RecyclerView
+    private var callbacks: Callbacks? = null
+    private lateinit var crimeRecyclerView: RecyclerView
     private var adapter: CrimeAdapter? = null
 
-    private val crimeListViewModel : CrimeListViewModel by lazy {
+    private val crimeListViewModel: CrimeListViewModel by lazy {
         ViewModelProviders.of(this).get(CrimeListViewModel::class.java)
     }
 
@@ -32,7 +36,13 @@ class CrimeListFragment : Fragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        callbacks = context as Callbacks?
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.fragment_crime_list, container, false)
     }
@@ -51,7 +61,20 @@ class CrimeListFragment : Fragment() {
     }
 
     private fun updateUI(crimes: List<Crime>) {
-        adapter = CrimeAdapter(crimes)
+        adapter = CrimeAdapter(crimes, this)
         crimeRecyclerView.adapter = adapter
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        callbacks = null
+    }
+
+    override fun onItemClicked(crimeId: UUID) {
+        callbacks?.onCrimeSelected(crimeId)
+    }
+
+    interface Callbacks {
+        fun onCrimeSelected(crimeId: UUID)
     }
 }

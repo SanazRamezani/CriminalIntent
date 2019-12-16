@@ -21,6 +21,12 @@ class CrimeFragment : Fragment() {
     private lateinit var solvedCheckBox: CheckBox
     private lateinit var titleWatcher: TextWatcher
 
+    companion object {
+        fun newInstance() : CrimeFragment {
+            return CrimeFragment()
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         crime = Crime()
